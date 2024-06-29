@@ -10,11 +10,11 @@ import string
 from datetime import datetime
 
 # Load environment variables from .env file
-# load_dotenv()
-# BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-# U can add yours to enviromental variables...
-import os
+load_dotenv()
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+# U can add yours to enviromental variables...
+# import os
+# BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
 url_plug = "https://roynek.com/alltrenders/codes/Telegram_Bot/Roynek%20Grows%20Bot"
 game_url = f'{url_plug}/pre_game.html'
@@ -63,7 +63,7 @@ async def the_main(update: Update, context: CallbackContext, command="start"):
         keyboard = [
             [InlineKeyboardButton("Play Now", url=game_url_with_params)],
             [InlineKeyboardButton("View Our Calendar", url=calendar_url)],
-            [InlineKeyboardButton("Join Our Telegram Channel", url=telegram_channel_url)]
+            [InlineKeyboardButton("Join Our Telegram Channel", url=telegram_channel_url)],
             [InlineKeyboardButton("Join Our Community", url=telegram_community)]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -112,7 +112,7 @@ async def the_main(update: Update, context: CallbackContext, command="start"):
             keyboard = [
                 [InlineKeyboardButton("Play Now", url=game_url_with_params)],
                 [InlineKeyboardButton("View Our Calendar", url=calendar_url)],
-                [InlineKeyboardButton("Join Our Telegram Channel", url=telegram_channel_url)]
+                [InlineKeyboardButton("Join Our Telegram Channel", url=telegram_channel_url)],
                 [InlineKeyboardButton("Join Our Community", url=telegram_community)]
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
