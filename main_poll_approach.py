@@ -1,20 +1,21 @@
+
 import os
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, ApplicationBuilder, CommandHandler, CallbackContext
-# ContextTypes, Dispatcher
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackContext
 from dotenv import load_dotenv
 import requests
 from urllib.parse import urlencode
 import random
 import string
 from datetime import datetime
-from flask import Flask, request
 
 # Load environment variables from .env file
 load_dotenv()
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # Your webhook URL
+# U can add yours to enviromental variables...
+# import os
+# BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
 url_plug = "https://roynek.com/alltrenders/codes/Telegram_Bot/Roynek%20Grows%20Bot"
 game_url = f'{url_plug}/pre_game.html'
@@ -146,50 +147,17 @@ async def referral(update: Update, context: CallbackContext):
     referral_link = f"https://t.me/RoynekGrowsBot?start={user_id}"
     await update.message.reply_text(f'Your referral link is: {referral_link}')
 
-# app = Flask(__name__)
-
-# @app.route('/webhook', methods=['POST'])
-# def webhook():
-#     update = Update.de_json(request.get_json(), bot)
-#     dispatcher.process_update(update)
-#     return "ok", 200
-
-# if __name__ == '__main__':
-#     bot = ApplicationBuilder().token(BOT_TOKEN).build()
-#     dispatcher = bot.dispatcher
-
-#     start_handler = CommandHandler('start', start)
-#     play_handler = CommandHandler('play', play)
-#     referral_handler = CommandHandler('referral', referral)
-
-#     dispatcher.add_handler(start_handler)
-#     dispatcher.add_handler(play_handler)
-#     dispatcher.add_handler(referral_handler)
-
-#     bot.set_webhook(WEBHOOK_URL)
-#     app.run(port=5000)
-
-app = Flask(__name__)
-
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s', level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# Initialize the bot application
-application = Application.builder().token(BOT_TOKEN).build()
-
-# Add handlers
-application.add_handler(CommandHandler('start', start))
-application.add_handler(CommandHandler('play', play))
-application.add_handler(CommandHandler('referral', referral))
-
-# Set the webhook
-application.bot.set_webhook(WEBHOOK_URL)
-
-@app.route('/webhook', methods=['POST'])
-def webhook():
-    update = Update.de_json(request.get_json(force=True), application.bot)
-    application.update_queue.put(update)
-    return "ok", 200
-
 if __name__ == '__main__':
-    app.run(port=5000)
+    application = ApplicationBuilder().token(BOT_TOKEN).build()
+
+    start_handler = CommandHandler('start', start)
+    play_handler = CommandHandler('play', play)
+    referral_handler = CommandHandler('referral', referral)
+
+    application.add_handler(start_handler)
+    application.add_handler(play_handler)
+    application.add_handler(referral_handler)
+
+    application.run_polling()
+
+
