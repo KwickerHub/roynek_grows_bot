@@ -137,7 +137,7 @@ async def play(update: Update, context: CallbackContext):
 async def referral(update: Update, context: CallbackContext):
     user = update.message.from_user
     user_id = user.id
-    referral_link = f"https://t.me/your_bot_name?start={user_id}"
+    referral_link = f"https://t.me/RoynekGrowsBot?start={user_id}"
     await update.message.reply_text(f'Your referral link is: {referral_link}')
 
 if __name__ == '__main__':
