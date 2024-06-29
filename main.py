@@ -74,12 +74,12 @@ async def the_main(update: Update, context: CallbackContext, command="start"):
             "we are committed and sure of our launch date.\n\n"
             "Click the button below to start playing the game: You can only use this button once. \n\n"
             "To enjoy another session, give the /play command again \n\n"
-            "Stay updated with our proposed calendar by clicking the link below.\n\n"
+            "Stay updated with our proposed calendar below.\n\n"
             "Join our Telegram channel for the latest updates and community discussions."
         ) if (command == "start") else (
             "Click the button below to start playing the game: It is a one time button, you can not use it again. \n\n "
             "We have improved the security of telegram games. To enjoy another session, give the /play command again \n\n"
-            "Stay updated with our proposed calendar by clicking the link below.\n\n"
+            "Stay updated with our proposed calendar below.\n\n"
             "Join our Telegram channel for the latest updates and community discussions."
         )
 
