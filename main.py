@@ -229,43 +229,43 @@ async def handle_callback_query(update: Update, context: CallbackContext):
     # # Answer the callback query with the game URL
     # await query.answer(url=game_url)
 
-# app = Flask(__name__)
+app = Flask(__name__)
 
-# logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s', level=logging.INFO)
-# logger = logging.getLogger(__name__)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-# # Initialize the bot application
-# application = Application.builder().token(BOT_TOKEN).build()
+# Initialize the bot application
+application = Application.builder().token(BOT_TOKEN).build()
 
-# # Add handlers
-# application.add_handler(CommandHandler('start', start))
-# application.add_handler(CommandHandler('play', play))
-# application.add_handler(CommandHandler('referral', referral))
+# Add handlers
+application.add_handler(CommandHandler('start', start))
+application.add_handler(CommandHandler('play', play))
+application.add_handler(CommandHandler('referral', referral))
 
-# # Set the webhook
-# application.bot.set_webhook(WEBHOOK_URL)
+# Set the webhook
+application.bot.set_webhook(WEBHOOK_URL)
 
-# @app.route('/webhook', methods=['POST'])
-# def webhook():
-#     update = Update.de_json(request.get_json(force=True), application.bot)
-#     application.update_queue.put(update)
-#     return "ok", 200
-
-# if __name__ == '__main__':
-#     app.run(port=5000)
-#     app.run(port=8000)
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    update = Update.de_json(request.get_json(force=True), application.bot)
+    application.update_queue.put(update)
+    return "ok", 200
 
 if __name__ == '__main__':
-    application = ApplicationBuilder().token(BOT_TOKEN).build()
+    # app.run(port=5000)
+    app.run(port=8000)
 
-    start_handler = CommandHandler('start', start)
-    play_handler = CommandHandler('play', play)
-    referral_handler = CommandHandler('referral', referral)
+# if __name__ == '__main__':
+#     application = ApplicationBuilder().token(BOT_TOKEN).build()
 
-    application.add_handler(start_handler)
-    application.add_handler(play_handler)
-    application.add_handler(referral_handler)
-    application.add_handler(CommandHandler('sendgame', present_game))
-    application.add_handler(CallbackQueryHandler(handle_callback_query))
+#     start_handler = CommandHandler('start', start)
+#     play_handler = CommandHandler('play', play)
+#     referral_handler = CommandHandler('referral', referral)
 
-    application.run_polling()
+#     application.add_handler(start_handler)
+#     application.add_handler(play_handler)
+#     application.add_handler(referral_handler)
+#     application.add_handler(CommandHandler('sendgame', present_game))
+#     application.add_handler(CallbackQueryHandler(handle_callback_query))
+
+#     application.run_polling()
