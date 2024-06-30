@@ -8,6 +8,8 @@ import requests
 import random
 import string
 from datetime import datetime
+from urllib.parse import urlencode
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -156,7 +158,7 @@ application.add_handler(CommandHandler('play', play))
 application.add_handler(CommandHandler('referral', referral))
 
 # Set the webhook
-application.bot.set_webhook(WEBHOOK_URL)
+# application.bot.set_webhook(WEBHOOK_URL)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -165,4 +167,7 @@ def webhook():
     return "ok", 200
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(port=8000)
+
+#  http://rnyws-105-112-226-122.a.free.pinggy.link                             
+#    https://rnyws-105-112-226-122.a.free.pinggy.link 
