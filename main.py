@@ -243,7 +243,7 @@ application.add_handler(CommandHandler('play', play))
 application.add_handler(CommandHandler('referral', referral))
 
 # Set the webhook
-await application.bot.set_webhook(WEBHOOK_URL)
+application.bot.set_webhook(WEBHOOK_URL)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
