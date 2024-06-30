@@ -252,14 +252,25 @@ async def set_webhook():
 @app.route('/webhook', methods=['POST'])
 def webhook():
     update = Update.de_json(request.get_json(force=True), application.bot)
-    application.update_queue.put(update)
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(application.update_queue.put(update))
     return "ok", 200
 
 if __name__ == '__main__':
-    
-    # asyncio.run(set_webhook())
-    # app.run(port=5000)
+    asyncio.run(set_webhook())
     app.run(port=8000)
+
+# @app.route('/webhook', methods=['POST'])
+# def webhook():
+#     update = Update.de_json(request.get_json(force=True), application.bot)
+#     application.update_queue.put(update)
+#     return "ok", 200
+
+# if __name__ == '__main__':
+    
+#     # asyncio.run(set_webhook())
+#     # app.run(port=5000)
+#     app.run(port=8000)
 
 # if __name__ == '__main__':
 #     application = ApplicationBuilder().token(BOT_TOKEN).build()
