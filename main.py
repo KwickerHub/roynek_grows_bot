@@ -24,7 +24,10 @@ telegram_channel_url = "https://t.me/roynek_grows"
 telegram_community = "https://t.me/roynek_grows_coin"
 game_short_name = "roynek_grows_game"
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s', level=logging.INFO)
+# Enhanced logging configuration
+# logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+# logger = logging.getLogger(__name__)
+
 
 def generate_strong_password(length=12):
     characters = string.ascii_letters + string.digits + string.punctuation
@@ -249,9 +252,9 @@ async def set_webhook():
     # await application.bot.set_webhook(WEBHOOK_URL+/webhook)
     await application.bot.set_webhook(f"{WEBHOOK_URL}/webhook")
 
-@app.route('/mainers', methods=['POST'])
+@app.route('/')
 def mainers():
-    print("webhook to main.")
+    print("Hello world...")
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -271,8 +274,10 @@ def webhook():
 if __name__ == '__main__':
     logger.info("Starting application")
     print("App has started")
-    asyncio.run(set_webhook())
+    # asyncio.run(set_webhook())
     app.run(port=8000)
+
+    
 # def webhook():
 #     update = Update.de_json(request.get_json(force=True), application.bot)
 #     loop = asyncio.get_event_loop()
@@ -280,7 +285,7 @@ if __name__ == '__main__':
 #     return "ok", 200
 
 # if __name__ == '__main__':
-#     asyncio.run(set_webhook())
+#     # asyncio.run(set_webhook())
 #     app.run(port=8000)
 
 # @app.route('/webhook', methods=['POST'])
