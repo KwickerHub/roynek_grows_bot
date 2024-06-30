@@ -296,13 +296,30 @@ def mainers():
 @app.route('/webhook', methods=['POST'])
 def webhook():
     update = Update.de_json(request.get_json(force=True), application.bot)
+    UserWarning("okay here it is")
     application.update_queue.put(update)
     return "ok", 200
 
+@app.route('/webhook')
+def webhook():
+    # update = Update.de_json(request.get_json(force=True), application.bot)
+    # UserWarning("okay here it is")
+    # application.update_queue.put(update)
+    # return "ok", 200
+    try:
+        update = Update.de_json(request.get_json(force=True), application.bot)
+        logger.info(f"Update received: {update}")
+        asyncio.run(application.update_queue.put(update))
+        logger.info("Update processed")
+        return ("processed as supposed.")
+    except Exception as e:
+        logger.error(f"Error processing update: {e}")
+        return (f"Error processing update: {e}")
 if __name__ == '__main__':
     
     # asyncio.run(set_webhook())
     # app.run(port=5000)
+    UserWarning("just using some warnings to debug")
     app.run(port=8000)
 
 # if __name__ == '__main__':
