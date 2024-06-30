@@ -10,6 +10,7 @@ import random
 import string
 from datetime import datetime
 from flask import Flask, request
+import asyncio
 
 # Load environment variables from .env file
 load_dotenv()
@@ -243,7 +244,9 @@ application.add_handler(CommandHandler('play', play))
 application.add_handler(CommandHandler('referral', referral))
 
 # Set the webhook
-application.bot.set_webhook(WEBHOOK_URL)
+# application.bot.set_webhook(WEBHOOK_URL)
+async def set_webhook():
+    await application.bot.set_webhook(WEBHOOK_URL)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -252,6 +255,8 @@ def webhook():
     return "ok", 200
 
 if __name__ == '__main__':
+    
+    asyncio.run(set_webhook())
     # app.run(port=5000)
     app.run(port=8000)
 
