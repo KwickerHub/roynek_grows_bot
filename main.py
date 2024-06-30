@@ -248,36 +248,36 @@ application.add_handler(CommandHandler('referral', referral))
 
 # Set the webhook
 # application.bot.set_webhook(WEBHOOK_URL)
-async def set_webhook():
-    # await application.bot.set_webhook(WEBHOOK_URL+/webhook)
-    await application.bot.set_webhook(f"{WEBHOOK_URL}/webhook")
+# async def set_webhook():
+#     # await application.bot.set_webhook(WEBHOOK_URL+/webhook)
+#     await application.bot.set_webhook(f"{WEBHOOK_URL}/webhook")
 
-@app.route('/')
-def mainers():
-    print("Hello world...")
+# @app.route('/')
+# def mainers():
+#     print("Hello world...")
 
-@app.route('/webhook', methods=['POST'])
-def webhook():
-    logger.info("Received a webhook request")
-    print("Received a webhook request")
-    try:
-        update = Update.de_json(request.get_json(force=True), application.bot)
-        logger.info(f"Update received: {update}")
-        asyncio.run(application.update_queue.put(update))
-        logger.info("Update processed")
-        print("processed as supposed.")
-    except Exception as e:
-        logger.error(f"Error processing update: {e}")
-        print(f"Error processing update: {e}")
-    return "ok", 200
+# @app.route('/webhook', methods=['POST'])
+# def webhook():
+#     logger.info("Received a webhook request")
+#     print("Received a webhook request")
+#     try:
+#         update = Update.de_json(request.get_json(force=True), application.bot)
+#         logger.info(f"Update received: {update}")
+#         asyncio.run(application.update_queue.put(update))
+#         logger.info("Update processed")
+#         print("processed as supposed.")
+#     except Exception as e:
+#         logger.error(f"Error processing update: {e}")
+#         print(f"Error processing update: {e}")
+#     return "ok", 200
 
-if __name__ == '__main__':
-    logger.info("Starting application")
-    print("App has started")
-    # asyncio.run(set_webhook())
-    app.run(port=8000)
+# if __name__ == '__main__':
+#     logger.info("Starting application")
+#     print("App has started")
+#     # asyncio.run(set_webhook())
+#     app.run(port=8000)
 
-    
+
 # def webhook():
 #     update = Update.de_json(request.get_json(force=True), application.bot)
 #     loop = asyncio.get_event_loop()
@@ -288,17 +288,22 @@ if __name__ == '__main__':
 #     # asyncio.run(set_webhook())
 #     app.run(port=8000)
 
-# @app.route('/webhook', methods=['POST'])
-# def webhook():
-#     update = Update.de_json(request.get_json(force=True), application.bot)
-#     application.update_queue.put(update)
-#     return "ok", 200
+@app.route('/')
+def mainers():
+    print("Hello world...")
+    return "Hello world"
 
-# if __name__ == '__main__':
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    update = Update.de_json(request.get_json(force=True), application.bot)
+    application.update_queue.put(update)
+    return "ok", 200
+
+if __name__ == '__main__':
     
-#     # asyncio.run(set_webhook())
-#     # app.run(port=5000)
-#     app.run(port=8000)
+    # asyncio.run(set_webhook())
+    # app.run(port=5000)
+    app.run(port=8000)
 
 # if __name__ == '__main__':
 #     application = ApplicationBuilder().token(BOT_TOKEN).build()
