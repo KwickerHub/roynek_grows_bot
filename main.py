@@ -250,26 +250,30 @@ async def set_webhook():
     await application.bot.set_webhook(f"{WEBHOOK_URL}/webhook")
 
 @app.route('/webhook', methods=['POST'])
-
 def webhook():
     logger.info("Received a webhook request")
     try:
         update = Update.de_json(request.get_json(force=True), application.bot)
+        logger.info(f"Update received: {update}")
         asyncio.run(application.update_queue.put(update))
         logger.info("Update processed")
     except Exception as e:
         logger.error(f"Error processing update: {e}")
     return "ok", 200
 
+if __name__ == '__main__':
+    logger.info("Starting application")
+    asyncio.run(set_webhook())
+    app.run(port=8000)
 # def webhook():
 #     update = Update.de_json(request.get_json(force=True), application.bot)
 #     loop = asyncio.get_event_loop()
 #     loop.run_until_complete(application.update_queue.put(update))
 #     return "ok", 200
 
-if __name__ == '__main__':
-    asyncio.run(set_webhook())
-    app.run(port=8000)
+# if __name__ == '__main__':
+#     asyncio.run(set_webhook())
+#     app.run(port=8000)
 
 # @app.route('/webhook', methods=['POST'])
 # def webhook():
