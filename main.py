@@ -246,7 +246,8 @@ application.add_handler(CommandHandler('referral', referral))
 # Set the webhook
 # application.bot.set_webhook(WEBHOOK_URL)
 async def set_webhook():
-    await application.bot.set_webhook(WEBHOOK_URL)
+    # await application.bot.set_webhook(WEBHOOK_URL+/webhook)
+    await application.bot.set_webhook(f"{WEBHOOK_URL}/webhook")
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
