@@ -31,6 +31,7 @@ def generate_strong_password(length=12):
     return password
 
 async def the_main(update: Update, context: CallbackContext, command="start"):
+    print(update)
     user = update.message.from_user
     user_id = user.id
     username = user.username

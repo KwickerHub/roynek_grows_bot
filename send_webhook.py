@@ -30,7 +30,7 @@ payload = {
             "username": "NKenyor",
             "is_bot": False  # Add this field
         },
-        "text": "/referral"
+        "text": "/play"
     }
 }
 

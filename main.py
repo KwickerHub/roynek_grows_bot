@@ -1,6 +1,3 @@
-
-
-
 import os
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, CallbackGame
@@ -40,9 +37,13 @@ async def generate_strong_password(length=12):
     password = ''.join(random.choice(characters) for i in range(length))
     return password
 
-async def the_main(update: Update, context: CallbackContext, command="start"):
+
+import httpx
+from datetime import datetime
+from urllib.parse import urlencode
+
+async def the_main(update, context, command="start"):
     if update.callback_query:
-        #await handle_callback_query(update, context)
         query = update.callback_query
         user = query.from_user
         user_id = user.id
@@ -50,81 +51,27 @@ async def the_main(update: Update, context: CallbackContext, command="start"):
         first_name = user.first_name
         last_name = user.last_name
         referrer_id = None
-
-        # game_short_name_rec = query.game_short_name
-        # print("User Details:", user_details)
     else:
-        # Handle other types of updates, like messages, etc.
-        # pass
         user = update.message.from_user
         user_id = user.id
         username = user.username
         first_name = user.first_name
         last_name = user.last_name
-        referrer_id = context.args[0] if context.args else None
+        # referrer_id = context.args[0] if context.args else None
+        referrer_id = None
+        # Extract the referral ID from the message text
+        if update.message and update.message.text:
+            command_parts = update.message.text.split()
+            if len(command_parts) > 1:
+                referrer_id = command_parts[1]
 
-  
-    response = requests.post(f'{url_plug}/check_user.php', data={
-        'username': username,
-        'tele_id': user_id,
-        'referrer_id': referrer_id,
-        'first_name': first_name,
-        'last_name': last_name
-    })
-    result = response.json()
-
-    if result["status"]:
-        query_params = {
-            'hash': result["hash"],
-            'tele_id': user_id,
-            'username': username,
-            'first_name': first_name,
-            'last_name': last_name
-        }
-        game_url_with_params = f"{game_url}?{urlencode(query_params)}"
-        game = CallbackGame() 
-        # buttons = [[InlineKeyboardButton(text="Show Menu",callback_game=game)]] 
-        
-        keyboard = [
-            # [InlineKeyboardButton("Play Now", url=game_url_with_params)],
-            [InlineKeyboardButton("Play Now",callback_game=game)],
-            [InlineKeyboardButton("View Our Calendar", url=calendar_url)],
-            [InlineKeyboardButton("Join Our Telegram Channel", url=telegram_channel_url)],
-            [InlineKeyboardButton("Join Our Community", url=telegram_community)]
-        ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-
-        # welcome_message = (
-        #     f"🎉 Welcome {username}! 🎉 You are now a Roynekian with Grows Powers \n\n"
-        #     "We're thrilled to have you here. Unlike other Telegram token games, "
-        #     "we are committed and sure of our launch date.\n\n"
-        #     "Click the button below to start playing the game: You can only use this button once. \n\n"
-        #     "To enjoy another session, give the /play command again \n\n"
-        #     "Stay updated with our proposed calendar below.\n\n"
-        #     "Join our Telegram channel for the latest updates and community discussions."
-        # ) if (command == "start") else (
-        #     "Click the button below to start playing the game: It is a one time button, you can not use it again. \n\n "
-        #     "We have improved the security of telegram games. To enjoy another session, give the /play command again \n\n"
-        #     "Stay updated with our proposed calendar below.\n\n"
-        #     "Join our Telegram channel for the latest updates and community discussions."
-        # )
-
-        # await update.message.reply_text(welcome_message, reply_markup=reply_markup)
-        # await update.message.reply_game(game_short_name=game_short_name,reply_markup=reply_markup)
-        await query.answer(url=game_url_with_params) if (update.callback_query) else await update.message.reply_game(game_short_name=game_short_name,reply_markup=reply_markup)
-        # await context.bot.send_game(chat_id=update.effective_chat.id,game_short_name=game_short_name,reply_markup=reply_markup) 
-    else:
-        response = requests.post(f'{url_plug}/register_user.php', data={
+    async with httpx.AsyncClient() as client:
+        response = await client.post(f'{url_plug}/check_user.php', data={
             'username': username,
             'tele_id': user_id,
             'referrer_id': referrer_id,
             'first_name': first_name,
-            'last_name': last_name,
-            'email': None,
-            'password': await generate_strong_password(),
-            'third_party_id': user_id,
-            'signup_date': formattedDate,
-            'signup_time': formattedTime,
+            'last_name': last_name
         })
         result = response.json()
 
@@ -137,42 +84,186 @@ async def the_main(update: Update, context: CallbackContext, command="start"):
                 'last_name': last_name
             }
             game_url_with_params = f"{game_url}?{urlencode(query_params)}"
-            game = CallbackGame() 
-            # buttons = [[InlineKeyboardButton(text="Show Menu",callback_game=game)]] 
-
+            game = CallbackGame()
             keyboard = [
-                # [InlineKeyboardButton("Play Now", url=game_url_with_params)],
-                [InlineKeyboardButton(text="Play Now",callback_game=game)],
+                [InlineKeyboardButton("Play Now", callback_game=game)],
                 [InlineKeyboardButton("View Our Calendar", url=calendar_url)],
                 [InlineKeyboardButton("Join Our Telegram Channel", url=telegram_channel_url)],
                 [InlineKeyboardButton("Join Our Community", url=telegram_community)]
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
 
-            # welcome_message = (
-            #     f"🎉 Welcome {username}! 🎉 You are now a Roynekian with Grows Powers \n\n"
-            #     "We're thrilled to have you here. Unlike other Telegram token games, "
-            #     "we are committed and sure of our launch date.\n\n"
-            #     "Click the button below to start playing the game:\n\n"
-            #     "Stay updated with our proposed calendar below.\n\n"
-            #     "Join our Telegram channel for the latest updates and community discussions."
-            # ) if (command == "start") else (
-            #     "Click the button below to start playing the game:\n\n"
-            #     "Stay updated with our proposed calendar below.\n\n"
-            #     "Join our Telegram channel for the latest updates and community discussions."
-            # )
-
-            # Send the welcome message with inline buttons
-            # await update.message.reply_text(welcome_message, reply_markup=reply_markup)
-            # Send the game message
-            # await context.bot.send_game(chat_id=update.effective_chat.id, game_short_name=game_short_name)
-            # await context.bot.send_game(chat_id=update.effective_chat.id, game_short_name=game_short_name)
-
-            # update.message.reply_text(welcome_message)
-            await update.message.reply_game(game_short_name=game_short_name, reply_markup=reply_markup)
-            # await context.bot.send_game(chat_id=update.effective_chat.id, game_short_name=game_short_name, reply_markup=reply_markup) 
+            await query.answer(url=game_url_with_params) if (update.callback_query) else await update.message.reply_game(game_short_name=game_short_name, reply_markup=reply_markup)
         else:
-            await update.message.reply_text('We are having some issues. We are working on fixing it, Hope to see you around.')
+            response = await client.post(f'{url_plug}/register_user.php', data={
+                'username': username,
+                'tele_id': user_id,
+                'referrer_id': referrer_id,
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': None,
+                'password': await generate_strong_password(),
+                'third_party_id': user_id,
+                'signup_date': formattedDate,
+                'signup_time': formattedTime,
+            })
+            result = response.json()
+
+            if result["status"]:
+                query_params = {
+                    'hash': result["hash"],
+                    'tele_id': user_id,
+                    'username': username,
+                    'first_name': first_name,
+                    'last_name': last_name
+                }
+                game_url_with_params = f"{game_url}?{urlencode(query_params)}"
+                game = CallbackGame()
+                keyboard = [
+                    [InlineKeyboardButton("Play Now", callback_game=game)],
+                    [InlineKeyboardButton("View Our Calendar", url=calendar_url)],
+                    [InlineKeyboardButton("Join Our Telegram Channel", url=telegram_channel_url)],
+                    [InlineKeyboardButton("Join Our Community", url=telegram_community)]
+                ]
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                await update.message.reply_game(game_short_name=game_short_name, reply_markup=reply_markup)
+            else:
+                await update.message.reply_text('We are having some issues. We are working on fixing it, Hope to see you around.')
+
+
+# async def the_main(update: Update, context: CallbackContext, command="start"):
+#     if update.callback_query:
+#         #await handle_callback_query(update, context)
+#         query = update.callback_query
+#         user = query.from_user
+#         user_id = user.id
+#         username = user.username
+#         first_name = user.first_name
+#         last_name = user.last_name
+#         referrer_id = None
+
+#         # game_short_name_rec = query.game_short_name
+#         # print("User Details:", user_details)
+#     else:
+#         # Handle other types of updates, like messages, etc.
+#         # pass
+#         user = update.message.from_user
+#         user_id = user.id
+#         username = user.username
+#         first_name = user.first_name
+#         last_name = user.last_name
+#         referrer_id = context.args[0] if context.args else None
+
+  
+#     response = requests.post(f'{url_plug}/check_user.php', data={
+#         'username': username,
+#         'tele_id': user_id,
+#         'referrer_id': referrer_id,
+#         'first_name': first_name,
+#         'last_name': last_name
+#     })
+#     result = response.json()
+
+#     if result["status"]:
+#         query_params = {
+#             'hash': result["hash"],
+#             'tele_id': user_id,
+#             'username': username,
+#             'first_name': first_name,
+#             'last_name': last_name
+#         }
+#         game_url_with_params = f"{game_url}?{urlencode(query_params)}"
+#         game = CallbackGame() 
+#         # buttons = [[InlineKeyboardButton(text="Show Menu",callback_game=game)]] 
+        
+#         keyboard = [
+#             # [InlineKeyboardButton("Play Now", url=game_url_with_params)],
+#             [InlineKeyboardButton("Play Now",callback_game=game)],
+#             [InlineKeyboardButton("View Our Calendar", url=calendar_url)],
+#             [InlineKeyboardButton("Join Our Telegram Channel", url=telegram_channel_url)],
+#             [InlineKeyboardButton("Join Our Community", url=telegram_community)]
+#         ]
+#         reply_markup = InlineKeyboardMarkup(keyboard)
+
+#         # welcome_message = (
+#         #     f"🎉 Welcome {username}! 🎉 You are now a Roynekian with Grows Powers \n\n"
+#         #     "We're thrilled to have you here. Unlike other Telegram token games, "
+#         #     "we are committed and sure of our launch date.\n\n"
+#         #     "Click the button below to start playing the game: You can only use this button once. \n\n"
+#         #     "To enjoy another session, give the /play command again \n\n"
+#         #     "Stay updated with our proposed calendar below.\n\n"
+#         #     "Join our Telegram channel for the latest updates and community discussions."
+#         # ) if (command == "start") else (
+#         #     "Click the button below to start playing the game: It is a one time button, you can not use it again. \n\n "
+#         #     "We have improved the security of telegram games. To enjoy another session, give the /play command again \n\n"
+#         #     "Stay updated with our proposed calendar below.\n\n"
+#         #     "Join our Telegram channel for the latest updates and community discussions."
+#         # )
+
+#         # await update.message.reply_text(welcome_message, reply_markup=reply_markup)
+#         # await update.message.reply_game(game_short_name=game_short_name,reply_markup=reply_markup)
+#         await query.answer(url=game_url_with_params) if (update.callback_query) else await update.message.reply_game(game_short_name=game_short_name,reply_markup=reply_markup)
+#         # await context.bot.send_game(chat_id=update.effective_chat.id,game_short_name=game_short_name,reply_markup=reply_markup) 
+#     else:
+#         response = requests.post(f'{url_plug}/register_user.php', data={
+#             'username': username,
+#             'tele_id': user_id,
+#             'referrer_id': referrer_id,
+#             'first_name': first_name,
+#             'last_name': last_name,
+#             'email': None,
+#             'password': await generate_strong_password(),
+#             'third_party_id': user_id,
+#             'signup_date': formattedDate,
+#             'signup_time': formattedTime,
+#         })
+#         result = response.json()
+
+#         if result["status"]:
+#             query_params = {
+#                 'hash': result["hash"],
+#                 'tele_id': user_id,
+#                 'username': username,
+#                 'first_name': first_name,
+#                 'last_name': last_name
+#             }
+#             game_url_with_params = f"{game_url}?{urlencode(query_params)}"
+#             game = CallbackGame() 
+#             # buttons = [[InlineKeyboardButton(text="Show Menu",callback_game=game)]] 
+
+#             keyboard = [
+#                 # [InlineKeyboardButton("Play Now", url=game_url_with_params)],
+#                 [InlineKeyboardButton(text="Play Now",callback_game=game)],
+#                 [InlineKeyboardButton("View Our Calendar", url=calendar_url)],
+#                 [InlineKeyboardButton("Join Our Telegram Channel", url=telegram_channel_url)],
+#                 [InlineKeyboardButton("Join Our Community", url=telegram_community)]
+#             ]
+#             reply_markup = InlineKeyboardMarkup(keyboard)
+
+#             # welcome_message = (
+#             #     f"🎉 Welcome {username}! 🎉 You are now a Roynekian with Grows Powers \n\n"
+#             #     "We're thrilled to have you here. Unlike other Telegram token games, "
+#             #     "we are committed and sure of our launch date.\n\n"
+#             #     "Click the button below to start playing the game:\n\n"
+#             #     "Stay updated with our proposed calendar below.\n\n"
+#             #     "Join our Telegram channel for the latest updates and community discussions."
+#             # ) if (command == "start") else (
+#             #     "Click the button below to start playing the game:\n\n"
+#             #     "Stay updated with our proposed calendar below.\n\n"
+#             #     "Join our Telegram channel for the latest updates and community discussions."
+#             # )
+
+#             # Send the welcome message with inline buttons
+#             # await update.message.reply_text(welcome_message, reply_markup=reply_markup)
+#             # Send the game message
+#             # await context.bot.send_game(chat_id=update.effective_chat.id, game_short_name=game_short_name)
+#             # await context.bot.send_game(chat_id=update.effective_chat.id, game_short_name=game_short_name)
+
+#             # update.message.reply_text(welcome_message)
+#             await update.message.reply_game(game_short_name=game_short_name, reply_markup=reply_markup)
+#             # await context.bot.send_game(chat_id=update.effective_chat.id, game_short_name=game_short_name, reply_markup=reply_markup) 
+#         else:
+#             await update.message.reply_text('We are having some issues. We are working on fixing it, Hope to see you around.')
 
 async def start(update: Update, context: CallbackContext):
     user = update.message.from_user
@@ -239,11 +330,11 @@ async def handle_callback_query(update: Update, context: CallbackContext):
 
 async def handler(update, context):
     # Telegram understands UTF-8, so encode text for unicode compatibility
-    text = update.message.text.encode('utf-8').decode()
+    text = str(update.message.text.encode('utf-8').decode() )
     print("got text message :", text)
-    if (text == "/start"): await start(update, context)
-    elif(text == "/play"): await play(update, context)
-    elif(text == "/referral"): await referral(update, context)
+    if (text.startswith("/start")): await start(update, context)
+    elif(text.startswith("/play")): await play(update, context)
+    elif(text.startswith("/referral")): await referral(update, context)
     
     # text = update.message.text.encode('utf-8').decode()
     # print("got text message :", text)
@@ -303,6 +394,6 @@ def webhook():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8000)
-    # app.run(port=8000)
+    # app.run(debug=True, port=8000)
+    app.run(port=8000)
 
