@@ -71,18 +71,39 @@ application.add_handler(MessageHandler(filters.Text, handle_text))
 @app.route('/webhook', methods=['POST'])
 def webhook():
     try:
-        json_data = request.get_json(force=True)
-        logger.info(f"Received JSON: {json_data}")
+        # json_data = request.get_json(force=True)
+        # logger.info(f"Received JSON: {json_data}")
         
-        update = Update.de_json(json_data, application.bot)
+        # update = Update.de_json(json_data, application.bot)
         
-        # Put the update into the queue using asyncio.run to ensure it's awaited
-        asyncio.run(application.update_queue.put(update))
+        # # Put the update into the queue using asyncio.run to ensure it's awaited
+        # asyncio.run(application.update_queue.put(update))
         
-        return "ok", 200
+        # return "ok", 200
+        # retrieve the message in JSON and then transform it to Telegram object
+        update = Update.de_json(request.get_json(force=True), application.bot)
+
+        # get the chat_id to be able to respond to the same user
+        chat_id = update.message.chat.id
+        # get the message id to be able to reply to this specific message
+        msg_id = update.message.message_id
+
+        # Telegram understands UTF-8, so encode text for unicode compatibility
+        text = update.message.text.encode('utf-8').decode()
+        print("got text message :", text)
+
+        # here we call our super AI
+        # response = get_response(text)
+        response = "hello made"
+
+        # now just send the message back
+        # notice how we specify the chat and the msg we reply to
+        asyncio.run(application.bot.send_message(chat_id=chat_id, text=response, reply_to_message_id=msg_id) )
+        # bot.sendMessage(chat_id=chat_id, text=response, reply_to_message_id=msg_id)
+
+        return 'ok'
     except Exception as e:
         logger.error(f"Error processing webhook: {e}")
-        return "error", 500
 
 
 if __name__ == '__main__':
