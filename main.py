@@ -35,14 +35,14 @@ now = datetime.now()
 formattedDate = now.strftime('%Y-%m-%d')
 formattedTime = now.strftime('%I:%M:%S %p')
 
-def generate_strong_password(length=12):
+async def generate_strong_password(length=12):
     characters = string.ascii_letters + string.digits + string.punctuation
     password = ''.join(random.choice(characters) for i in range(length))
     return password
 
-def the_main(update: Update, context: CallbackContext, command="start"):
+async def the_main(update: Update, context: CallbackContext, command="start"):
     if update.callback_query:
-        # handle_callback_query(update, context)
+        #await handle_callback_query(update, context)
         query = update.callback_query
         user = query.from_user
         user_id = user.id
@@ -62,8 +62,8 @@ def the_main(update: Update, context: CallbackContext, command="start"):
         first_name = user.first_name
         last_name = user.last_name
         referrer_id = context.args[0] if context.args else None
-    return "LEVEL COMPLETE"
-    print("LEVEL --- 1")
+
+  
     response = requests.post(f'{url_plug}/check_user.php', data={
         'username': username,
         'tele_id': user_id,
@@ -72,7 +72,7 @@ def the_main(update: Update, context: CallbackContext, command="start"):
         'last_name': last_name
     })
     result = response.json()
-    print(result)
+
     if result["status"]:
         query_params = {
             'hash': result["hash"],
@@ -108,12 +108,11 @@ def the_main(update: Update, context: CallbackContext, command="start"):
         #     "Stay updated with our proposed calendar below.\n\n"
         #     "Join our Telegram channel for the latest updates and community discussions."
         # )
-        print("LEVEL --- 2")
-        #  update.message.reply_text(welcome_message, reply_markup=reply_markup)
-        #  update.message.reply_game(game_short_name=game_short_name,reply_markup=reply_markup)
-        query.answer(url=game_url_with_params) if (update.callback_query) else  update.message.reply_game(game_short_name=game_short_name,reply_markup=reply_markup)
-        #  context.bot.send_game(chat_id=update.effective_chat.id,game_short_name=game_short_name,reply_markup=reply_markup) 
-        
+
+        # await update.message.reply_text(welcome_message, reply_markup=reply_markup)
+        # await update.message.reply_game(game_short_name=game_short_name,reply_markup=reply_markup)
+        await query.answer(url=game_url_with_params) if (update.callback_query) else await update.message.reply_game(game_short_name=game_short_name,reply_markup=reply_markup)
+        # await context.bot.send_game(chat_id=update.effective_chat.id,game_short_name=game_short_name,reply_markup=reply_markup) 
     else:
         response = requests.post(f'{url_plug}/register_user.php', data={
             'username': username,
@@ -122,7 +121,7 @@ def the_main(update: Update, context: CallbackContext, command="start"):
             'first_name': first_name,
             'last_name': last_name,
             'email': None,
-            'password':  generate_strong_password(),
+            'password': await generate_strong_password(),
             'third_party_id': user_id,
             'signup_date': formattedDate,
             'signup_time': formattedTime,
@@ -164,18 +163,18 @@ def the_main(update: Update, context: CallbackContext, command="start"):
             # )
 
             # Send the welcome message with inline buttons
-            #  update.message.reply_text(welcome_message, reply_markup=reply_markup)
+            # await update.message.reply_text(welcome_message, reply_markup=reply_markup)
             # Send the game message
-            #  context.bot.send_game(chat_id=update.effective_chat.id, game_short_name=game_short_name)
-            #  context.bot.send_game(chat_id=update.effective_chat.id, game_short_name=game_short_name)
+            # await context.bot.send_game(chat_id=update.effective_chat.id, game_short_name=game_short_name)
+            # await context.bot.send_game(chat_id=update.effective_chat.id, game_short_name=game_short_name)
 
             # update.message.reply_text(welcome_message)
-            update.message.reply_game(game_short_name=game_short_name, reply_markup=reply_markup)
-            #  context.bot.send_game(chat_id=update.effective_chat.id, game_short_name=game_short_name, reply_markup=reply_markup) 
+            await update.message.reply_game(game_short_name=game_short_name, reply_markup=reply_markup)
+            # await context.bot.send_game(chat_id=update.effective_chat.id, game_short_name=game_short_name, reply_markup=reply_markup) 
         else:
-             update.message.reply_text('We are having some issues. We are working on fixing it, Hope to see you around.')
+            await update.message.reply_text('We are having some issues. We are working on fixing it, Hope to see you around.')
 
-def start(update: Update, context: CallbackContext):
+async def start(update: Update, context: CallbackContext):
     user = update.message.from_user
     username = user.username
     welcome_message = (f"🎉 Welcome {username}! 🎉 You are now a Roynekian with Grows Powers \n\n"
@@ -186,21 +185,21 @@ def start(update: Update, context: CallbackContext):
     "Stay updated with our proposed calendar below.\n\n"
     "Join our Telegram channel for the latest updates and community discussions.")
     
-    update.message.reply_text(welcome_message)
+    await update.message.reply_text(welcome_message)
 
-    return the_main(update=update, context=context, command="start")
+    await the_main(update=update, context=context, command="start")
 
-def play(update: Update, context: CallbackContext):
-     return the_main(update=update, context=context, command="play")
+async def play(update: Update, context: CallbackContext):
+    await the_main(update=update, context=context, command="play")
 
-def referral(update: Update, context: CallbackContext):
+async def referral(update: Update, context: CallbackContext):
     user = update.message.from_user
     user_id = user.id
     referral_link = f"https://t.me/RoynekGrowsBot?start={user_id}"
-    update.message.reply_text(f'Your referral link is: {referral_link}')
+    await update.message.reply_text(f'Your referral link is: {referral_link}')
 
 
-def present_game(update: Update, context: CallbackContext):
+async def present_game(update: Update, context: CallbackContext):
     #add game_short_name value (despite the doc saying theres no  need to add it)
     # game.game_short_name=game_short_name
 
@@ -211,10 +210,10 @@ def present_game(update: Update, context: CallbackContext):
 
     #Send game with custom inline button
     keyboard_markup = InlineKeyboardMarkup(buttons)
-    context.bot.send_game(chat_id=update.effective_chat.id,game_short_name=game_short_name,reply_markup=keyboard_markup) 
+    await context.bot.send_game(chat_id=update.effective_chat.id,game_short_name=game_short_name,reply_markup=keyboard_markup) 
 
-def handle_callback_query(update: Update, context: CallbackContext):
-    the_main(update=update, context=context, command="play")
+async def handle_callback_query(update: Update, context: CallbackContext):
+    await the_main(update=update, context=context, command="play")
     # query = update.callback_query
     # user = query.from_user
 
@@ -231,20 +230,20 @@ def handle_callback_query(update: Update, context: CallbackContext):
     # print("User Details:", user_details)
 
     # Answer the callback query with the game URL
-    #  query.answer(url=game_url)
+    # await query.answer(url=game_url)
     # query = update.callback_query
     # print(query)
     # # Answer the callback query with the game URL
-    #  query.answer(url=game_url)
+    # await query.answer(url=game_url)
 
 
-def handler(update, context):
+async def handler(update, context):
     # Telegram understands UTF-8, so encode text for unicode compatibility
     text = update.message.text.encode('utf-8').decode()
     print("got text message :", text)
-    if (text == "/start"):  return start(update, context)
-    elif(text == "/play"):  return play(update, context)
-    elif(text == "/referral"):  return referral(update, context)
+    if (text == "/start"): await start(update, context)
+    elif(text == "/play"): await play(update, context)
+    elif(text == "/referral"): await referral(update, context)
     
     # text = update.message.text.encode('utf-8').decode()
     # print("got text message :", text)
@@ -252,8 +251,8 @@ def handler(update, context):
     # chat_id = update.message.chat.id
     # msg_id = update.message.message_id
     # response = "hello made..."
-    # #  application.bot.send_message(chat_id=chat_id, text=response, reply_to_message_id=msg_id) 
-    #  referral(update, context)
+    # # await application.bot.send_message(chat_id=chat_id, text=response, reply_to_message_id=msg_id) 
+    # await referral(update, context)
 
 app = Flask(__name__)
 
@@ -295,7 +294,7 @@ def webhook():
         # asyncio.run(application.bot.send_message(chat_id=chat_id, text=response, reply_to_message_id=msg_id) )
         # bot.sendMessage(chat_id=chat_id, text=response, reply_to_message_id=msg_id)
 
-        return handler(update, application)
+        asyncio.run( handler(update, application) )
 
         return 'ok'
     
@@ -307,13 +306,3 @@ if __name__ == '__main__':
     app.run(debug=True, port=8000)
     # app.run(port=8000)
 
-
-# # Initialize the bot application
-# application = Application.builder().token(BOT_TOKEN).build()
-
-# # Add handlers
-# application.add_handler(CommandHandler('start', start))
-# application.add_handler(CommandHandler('play', play))
-# application.add_handler(CommandHandler('referral', referral))
-
-# application.run_polling()
