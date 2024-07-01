@@ -1,4 +1,95 @@
+from flask import Flask, request
+import logging
+from telegram import Update, Bot
+from telegram.ext import Application, CommandHandler, MessageHandler, filters
+from dotenv import load_dotenv
 import os
+import logging
+import asyncio
+
+app = Flask(__name__)
+
+# Initialize logging
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO,
+    handlers=[
+        logging.StreamHandler()  # This ensures logs are sent to the console (stdout)
+    ]
+)
+logger = logging.getLogger(__name__)
+# import requests
+# import random
+# import string
+# from datetime import datetime
+# from urllib.parse import urlencode
+
+
+# Load environment variables from .env file
+load_dotenv()
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+
+# Initialize the bot application
+application = Application.builder().token(BOT_TOKEN).build()
+
+# Define command handlers
+def start(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Welcome to the bot! How can I help you today?")
+
+def play(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Let's play a game!")
+
+def referral(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Refer your friends and earn rewards!")
+
+# Define a message handler for text messages
+def handle_text(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id, text="hello")
+
+# Add handlers
+application.add_handler(CommandHandler('start', start))
+application.add_handler(CommandHandler('play', play))
+application.add_handler(CommandHandler('referral', referral))
+application.add_handler(MessageHandler(filters.Text, handle_text))
+# application.add_handler(MessageHandler(filters.Text & ~filters.Command, handle_text))
+
+# @app.route('/webhook', methods=['POST'])
+# def webhook():
+#     try:
+#         json_data = request.get_json(force=True)
+#         logger.info(f"Received JSON: {json_data}")
+        
+#         update = Update.de_json(json_data, application.bot)
+#         application.update_queue.put(update)
+        
+#         return "ok", 200
+#     except Exception as e:
+#         logger.error(f"Error processing webhook: {e}")
+#         return "error", 500
+
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    try:
+        json_data = request.get_json(force=True)
+        logger.info(f"Received JSON: {json_data}")
+        
+        update = Update.de_json(json_data, application.bot)
+        
+        # Put the update into the queue using asyncio.run to ensure it's awaited
+        asyncio.run(application.update_queue.put(update))
+        
+        return "ok", 200
+    except Exception as e:
+        logger.error(f"Error processing webhook: {e}")
+        return "error", 500
+
+
+if __name__ == '__main__':
+    app.run(port=8000)
+
+
+"""import os
 import logging
 from flask import Flask, request
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -23,6 +114,11 @@ logger = logging.getLogger(__name__)
 
 # Initialize the bot application
 application = Application.builder().token(BOT_TOKEN).build()
+
+# Add handlers
+application.add_handler(CommandHandler('start', start))
+application.add_handler(CommandHandler('play', play))
+application.add_handler(CommandHandler('referral', referral))
 
 async def generate_strong_password(length=12):
     characters = string.ascii_letters + string.digits + string.punctuation
@@ -167,7 +263,7 @@ def webhook():
     return "ok", 200
 
 if __name__ == '__main__':
-    app.run(port=8000)
+    app.run(port=8000)"""
 
 #  http://rnyws-105-112-226-122.a.free.pinggy.link                             
 #    https://rnyws-105-112-226-122.a.free.pinggy.link 
