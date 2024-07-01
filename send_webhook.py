@@ -10,26 +10,27 @@ url = 'http://localhost:8000/webhook'
 
 # Sample payload mimicking the webhook data
 # Sample payload mimicking the webhook data
+
 payload = {
-    "update_id": 10000,
+    "update_id": 7289772,
     "message": {
         "date": 1441645532,
         "chat": {
-            "last_name": "Test Lastname",
-            "id": 1111111,
-            "first_name": "Test Firstname",
-            "username": "Testusername",
+            "last_name": "N",
+            "id": 1091264015,
+            "first_name": "Ken",
+            "username": "NKenyor",
             "type": "private"  # Add this field
         },
-        "message_id": 1365,
+        "message_id": 334,
         "from": {
-            "last_name": "Test Lastname",
-            "id": 1111111,
-            "first_name": "Test Firstname",
-            "username": "Testusername",
+            "last_name": "N",
+            "id": 1091264015,
+            "first_name": "Ken",
+            "username": "NKenyor",
             "is_bot": False  # Add this field
         },
-        "text": "\start"
+        "text": "/play"
     }
 }
 
