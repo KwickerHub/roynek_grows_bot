@@ -269,7 +269,7 @@ async def process_update(request: Request):
     logger.info(f"Processing update: {update}")
     if update.message:
         await handle_text(update)
-    # await application.process_update(update)
+    await application.process_update(update)
 
     return Response(status_code=HTTPStatus.OK)
 
@@ -282,7 +282,7 @@ async def process_update(request: Request):
 
 # Add the command handler to the application
 application.add_handler(CommandHandler("start", start))
-
+application.add_handler(CallbackQueryHandler(handle_callback_query))
 # Run the application with Uvicorn
 # if __name__ == "__main__":
 #     import uvicorn
