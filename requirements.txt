@@ -4,3 +4,5 @@ requests
 Flask
 gunicorn
 quart
+fastapi
+uvicorn

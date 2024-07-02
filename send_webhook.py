@@ -2,7 +2,10 @@ import requests
 import json
 
 # The URL of the locally running Flask server
-url = 'http://localhost:8000/webhook'
+# url = 'http://localhost:8000/webhook'
+# url = 'http://0.0.0.0:8000/webhook'
+url = 'http://127.0.0.1:8000/webhook'
+
 # payload = {
 #     "update_id":1111111111,"message":{"message_id":2222,"from":{"id":333333333333,"is_bot":false,"first_name":"Username","last_name":"Lastname","username":"username","language_code":"en},"chat":{"id":1111111111,"first_name":"Username","last_name":"Lastname","username":"username","type":"private"},"date":1518592199,"text":"xyz"}
 #                                                                 }
@@ -12,28 +15,27 @@ url = 'http://localhost:8000/webhook'
 # Sample payload mimicking the webhook data
 
 payload = {
-    "update_id": 7289772,
+    "update_id": 74838539,
     "message": {
         "date": 1441645532,
         "chat": {
-            "last_name": "N",
-            "id": 1091264015,
-            "first_name": "Ken",
-            "username": "NKenyor",
+            "last_name": "NAME",
+            "id": 85393958985,
+            "first_name": "NAME",
+            "username": "NAME",
             "type": "private"  # Add this field
         },
-        "message_id": 334,
+        "message_id": 7487,
         "from": {
-            "last_name": "N",
-            "id": 1091264015,
-            "first_name": "Ken",
-            "username": "NKenyor",
+            "last_name": "NAME",
+            "id": 85393958985,
+            "first_name": "NAME",
+            "username": "NAME",
             "is_bot": False  # Add this field
         },
-        "text": "/play"
+        "text": "/start"
     }
 }
-
 
 # Headers
 headers = {

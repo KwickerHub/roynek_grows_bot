@@ -1,3 +1,13 @@
+import logging
+from contextlib import asynccontextmanager
+from http import HTTPStatus
+from telegram import Update
+# from telegram.ext import Application, CommandHandler
+# from telegram.ext._contexttypes import ContextTypes
+from fastapi import FastAPI, Request, Response
+from dotenv import load_dotenv
+import os
+
 import os
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, CallbackGame
@@ -130,141 +140,6 @@ async def the_main(update, context, command="start"):
             else:
                 await update.message.reply_text('We are having some issues. We are working on fixing it, Hope to see you around.')
 
-
-# async def the_main(update: Update, context: CallbackContext, command="start"):
-#     if update.callback_query:
-#         #await handle_callback_query(update, context)
-#         query = update.callback_query
-#         user = query.from_user
-#         user_id = user.id
-#         username = user.username
-#         first_name = user.first_name
-#         last_name = user.last_name
-#         referrer_id = None
-
-#         # game_short_name_rec = query.game_short_name
-#         # print("User Details:", user_details)
-#     else:
-#         # Handle other types of updates, like messages, etc.
-#         # pass
-#         user = update.message.from_user
-#         user_id = user.id
-#         username = user.username
-#         first_name = user.first_name
-#         last_name = user.last_name
-#         referrer_id = context.args[0] if context.args else None
-
-  
-#     response = requests.post(f'{url_plug}/check_user.php', data={
-#         'username': username,
-#         'tele_id': user_id,
-#         'referrer_id': referrer_id,
-#         'first_name': first_name,
-#         'last_name': last_name
-#     })
-#     result = response.json()
-
-#     if result["status"]:
-#         query_params = {
-#             'hash': result["hash"],
-#             'tele_id': user_id,
-#             'username': username,
-#             'first_name': first_name,
-#             'last_name': last_name
-#         }
-#         game_url_with_params = f"{game_url}?{urlencode(query_params)}"
-#         game = CallbackGame() 
-#         # buttons = [[InlineKeyboardButton(text="Show Menu",callback_game=game)]] 
-        
-#         keyboard = [
-#             # [InlineKeyboardButton("Play Now", url=game_url_with_params)],
-#             [InlineKeyboardButton("Play Now",callback_game=game)],
-#             [InlineKeyboardButton("View Our Calendar", url=calendar_url)],
-#             [InlineKeyboardButton("Join Our Telegram Channel", url=telegram_channel_url)],
-#             [InlineKeyboardButton("Join Our Community", url=telegram_community)]
-#         ]
-#         reply_markup = InlineKeyboardMarkup(keyboard)
-
-#         # welcome_message = (
-#         #     f"🎉 Welcome {username}! 🎉 You are now a Roynekian with Grows Powers \n\n"
-#         #     "We're thrilled to have you here. Unlike other Telegram token games, "
-#         #     "we are committed and sure of our launch date.\n\n"
-#         #     "Click the button below to start playing the game: You can only use this button once. \n\n"
-#         #     "To enjoy another session, give the /play command again \n\n"
-#         #     "Stay updated with our proposed calendar below.\n\n"
-#         #     "Join our Telegram channel for the latest updates and community discussions."
-#         # ) if (command == "start") else (
-#         #     "Click the button below to start playing the game: It is a one time button, you can not use it again. \n\n "
-#         #     "We have improved the security of telegram games. To enjoy another session, give the /play command again \n\n"
-#         #     "Stay updated with our proposed calendar below.\n\n"
-#         #     "Join our Telegram channel for the latest updates and community discussions."
-#         # )
-
-#         # await update.message.reply_text(welcome_message, reply_markup=reply_markup)
-#         # await update.message.reply_game(game_short_name=game_short_name,reply_markup=reply_markup)
-#         await query.answer(url=game_url_with_params) if (update.callback_query) else await update.message.reply_game(game_short_name=game_short_name,reply_markup=reply_markup)
-#         # await context.bot.send_game(chat_id=update.effective_chat.id,game_short_name=game_short_name,reply_markup=reply_markup) 
-#     else:
-#         response = requests.post(f'{url_plug}/register_user.php', data={
-#             'username': username,
-#             'tele_id': user_id,
-#             'referrer_id': referrer_id,
-#             'first_name': first_name,
-#             'last_name': last_name,
-#             'email': None,
-#             'password': await generate_strong_password(),
-#             'third_party_id': user_id,
-#             'signup_date': formattedDate,
-#             'signup_time': formattedTime,
-#         })
-#         result = response.json()
-
-#         if result["status"]:
-#             query_params = {
-#                 'hash': result["hash"],
-#                 'tele_id': user_id,
-#                 'username': username,
-#                 'first_name': first_name,
-#                 'last_name': last_name
-#             }
-#             game_url_with_params = f"{game_url}?{urlencode(query_params)}"
-#             game = CallbackGame() 
-#             # buttons = [[InlineKeyboardButton(text="Show Menu",callback_game=game)]] 
-
-#             keyboard = [
-#                 # [InlineKeyboardButton("Play Now", url=game_url_with_params)],
-#                 [InlineKeyboardButton(text="Play Now",callback_game=game)],
-#                 [InlineKeyboardButton("View Our Calendar", url=calendar_url)],
-#                 [InlineKeyboardButton("Join Our Telegram Channel", url=telegram_channel_url)],
-#                 [InlineKeyboardButton("Join Our Community", url=telegram_community)]
-#             ]
-#             reply_markup = InlineKeyboardMarkup(keyboard)
-
-#             # welcome_message = (
-#             #     f"🎉 Welcome {username}! 🎉 You are now a Roynekian with Grows Powers \n\n"
-#             #     "We're thrilled to have you here. Unlike other Telegram token games, "
-#             #     "we are committed and sure of our launch date.\n\n"
-#             #     "Click the button below to start playing the game:\n\n"
-#             #     "Stay updated with our proposed calendar below.\n\n"
-#             #     "Join our Telegram channel for the latest updates and community discussions."
-#             # ) if (command == "start") else (
-#             #     "Click the button below to start playing the game:\n\n"
-#             #     "Stay updated with our proposed calendar below.\n\n"
-#             #     "Join our Telegram channel for the latest updates and community discussions."
-#             # )
-
-#             # Send the welcome message with inline buttons
-#             # await update.message.reply_text(welcome_message, reply_markup=reply_markup)
-#             # Send the game message
-#             # await context.bot.send_game(chat_id=update.effective_chat.id, game_short_name=game_short_name)
-#             # await context.bot.send_game(chat_id=update.effective_chat.id, game_short_name=game_short_name)
-
-#             # update.message.reply_text(welcome_message)
-#             await update.message.reply_game(game_short_name=game_short_name, reply_markup=reply_markup)
-#             # await context.bot.send_game(chat_id=update.effective_chat.id, game_short_name=game_short_name, reply_markup=reply_markup) 
-#         else:
-#             await update.message.reply_text('We are having some issues. We are working on fixing it, Hope to see you around.')
-
 async def start(update: Update, context: CallbackContext):
     user = update.message.from_user
     username = user.username
@@ -277,7 +152,6 @@ async def start(update: Update, context: CallbackContext):
     "Join our Telegram channel for the latest updates and community discussions.")
     
     await update.message.reply_text(welcome_message)
-
     await the_main(update=update, context=context, command="start")
 
 async def play(update: Update, context: CallbackContext):
@@ -328,72 +202,88 @@ async def handle_callback_query(update: Update, context: CallbackContext):
     # await query.answer(url=game_url)
 
 
-async def handler(update, context):
-    # Telegram understands UTF-8, so encode text for unicode compatibility
-    text = str(update.message.text.encode('utf-8').decode() )
-    print("got text message :", text)
-    if (text.startswith("/start")): await start(update, context)
-    elif(text.startswith("/play")): await play(update, context)
-    elif(text.startswith("/referral")): await referral(update, context)
-    
-    # text = update.message.text.encode('utf-8').decode()
-    # print("got text message :", text)
+# async def handler(update, context):
+#     # Telegram understands UTF-8, so encode text for unicode compatibility
+#     text = str(update.message.text.encode('utf-8').decode() )
+#     print("got text message :", text)
+#     if ("//start" in text and len(text) <= 10):
+#         print("went here 1") 
+#         #await start(update, context)
+#     elif("//play" in text and len(text) <= 10): 
+#         await play(update, context)
+#         print("went here 2") 
+#     elif("//referral" in text and len(text) <= 10): 
+#         await referral(update, context)
+#         print("went here 3")
+#     else:
+#         print("went here 4")  
 
-    # chat_id = update.message.chat.id
-    # msg_id = update.message.message_id
-    # response = "hello made..."
-    # # await application.bot.send_message(chat_id=chat_id, text=response, reply_to_message_id=msg_id) 
-    # await referral(update, context)
+async def handle_text(update: Update):
+    text = update.message.text.strip()
+    if text.startswith("/start"):
+        await start(update, application)
+    elif text.startswith("/play"):
+        await play(update, application)
+    elif text.startswith("/referral"):
+        await referral(update, application)
+    elif update.callback_query:
+        await handle_callback_query(update, application)
+    else:
+        print("some text passed in...")
+        pass
 
-app = Flask(__name__)
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s', level=logging.INFO)
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# # Initialize the bot application
-application = Application.builder().token(BOT_TOKEN).build()
+# Load environment variables from .env file
+load_dotenv()
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # Your webhook URL
+
+# Initialize python telegram bot
+application = (
+    Application.builder()
+    .token(BOT_TOKEN)
+    .build()
+)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await application.bot.setWebhook(f"{WEBHOOK_URL}/webhook")
+    async with application:
+        await application.start()
+        yield
+        await application.stop()
+
+# Initialize FastAPI app
+app = FastAPI(lifespan=lifespan)
+
+@app.post("/webhook")
+async def process_update(request: Request):
+    req = await request.json()
+    logger.info(f"Received update: {req}")
+    update = Update.de_json(req, application.bot)
+    logger.info(f"Processing update: {update}")
+    if update.message:
+        await handle_text(update)
+    # await application.process_update(update)
+
+    return Response(status_code=HTTPStatus.OK)
+
+# async def start(update: Update, context: CallbackContext ):
+#     """Send a message when the command /start is issued."""
+#     print("atleaste we came here....")
+#     logger.info(f"Start command received from user: {update.message.from_user.id}")
+#     await update.message.reply_text("starting...")
 
 
-@app.route('/webhook', methods=['POST'])
-def webhook():
-    try:
-        data = request.get_json(force=True)
-        # print(data["message"]["text"])
-        message = data.get('message', '')  # Ensure you correctly extract the 'text' field
-        print("Received text:", message)  # Check the extracted text
+# Add the command handler to the application
+application.add_handler(CommandHandler("start", start))
 
-        update = Update.de_json(data, application.bot)
-        # print(update)
-        # # get the chat_id to be able to respond to the same user
-        chat_id = update.message.chat.id
-        # # get the message id to be able to reply to this specific message
-        msg_id = update.message.message_id
-
-        # # Telegram understands UTF-8, so encode text for unicode compatibility
-        text = update.message.text
-        # print(f"got text message : {text}: {update.message.chat.first_name}: {update.message.chat.username} ")
-
-        # Handle the update through the application
-        # asyncio.run(application.process_update(update) )
-
-        # here we call our super AI
-        # response = get_response(text)
-        response = "hello made..."
-
-        # now just send the message back
-        # notice how we specify the chat and the msg we reply to
-        # asyncio.run(application.bot.send_message(chat_id=chat_id, text=response, reply_to_message_id=msg_id) )
-        # bot.sendMessage(chat_id=chat_id, text=response, reply_to_message_id=msg_id)
-
-        asyncio.run( handler(update, application) )
-
-        return 'ok'
-    
-    except Exception as e:
-        logger.error(f"Error processing webhook: {e}")
-
-
-if __name__ == '__main__':
-    # app.run(debug=True, port=8000)
-    app.run(port=8000)
-
+# Run the application with Uvicorn
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
