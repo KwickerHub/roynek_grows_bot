@@ -145,8 +145,8 @@ async def start(update: Update, context: CallbackContext):
     username = user.username if user.username else ""
     first_name = user.first_name if user.first_name else ""
     last_name = user.last_name if user.last_name else ""
-    d_name = f"{first_name} {last_name}" 
-    intro_name = username if username != None else d_name
+    d_name = f"{last_name} {first_name}" 
+    intro_name = username if username != "" else d_name
     welcome_message = (f"🎉 Welcome {intro_name}! 🎉\n"
     "You are now a Roynekian with Grows Powers\n\n"
     "🚀 We're thrilled to have you here. Unlike other Telegram token games, "
