@@ -147,7 +147,7 @@ async def start(update: Update, context: CallbackContext):
     "We're thrilled to have you here. Unlike other Telegram token games, "
     "we are committed and sure of our launch date.\n\n"
     "Click the button below to start playing the game: You can only use this button once. \n\n"
-    "To enjoy another session, give the /play command again \n\n"
+    "We have improved the security of telegram Games. To enjoy another session, give the /play command again \n\n"
     "Stay updated with our proposed calendar below.\n\n"
     "Join our Telegram channel for the latest updates and community discussions.")
     
