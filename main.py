@@ -284,6 +284,6 @@ async def process_update(request: Request):
 application.add_handler(CommandHandler("start", start))
 
 # Run the application with Uvicorn
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run(app, host="0.0.0.0", port=8000)
