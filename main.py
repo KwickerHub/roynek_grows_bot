@@ -286,7 +286,8 @@ async def process_update(request: Request):
 
 
 # Add the command handler to the application
-application.add_handler(CommandHandler("start", start))
+# funny as this event handlers now work after creating a work around...
+# application.add_handler(CommandHandler("start", start))
 application.add_handler(CallbackQueryHandler(handle_callback_query))
 # Run the application with Uvicorn
 # if __name__ == "__main__":
