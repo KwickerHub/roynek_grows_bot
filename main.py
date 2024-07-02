@@ -142,14 +142,19 @@ async def the_main(update, context, command="start"):
 
 async def start(update: Update, context: CallbackContext):
     user = update.message.from_user
-    username = user.username
-    welcome_message = (f"🎉 Welcome {username}! 🎉 You are now a Roynekian with Grows Powers \n\n"
-    "We're thrilled to have you here. Unlike other Telegram token games, "
+    username = user.username if user.username else ""
+    first_name = user.first_name if user.first_name else ""
+    last_name = user.last_name if user.last_name else ""
+    d_name = f"{first_name} {last_name}" 
+    intro_name = username if username != None else d_name
+    welcome_message = (f"🎉 Welcome {intro_name}! 🎉\n"
+    "You are now a Roynekian with Grows Powers\n\n"
+    "🚀 We're thrilled to have you here. Unlike other Telegram token games, "
     "we are committed and sure of our launch date.\n\n"
-    "Click the button below to start playing the game: You can only use this button once. \n\n"
-    "We have improved the security of telegram Games. To enjoy another session, give the /play command again \n\n"
-    "Stay updated with our proposed calendar below.\n\n"
-    "Join our Telegram channel for the latest updates and community discussions.")
+    "👉 Click the button below to start playing the game: \n\n"
+    "🔒 We have improved the security of Telegram Games. \n\n"
+    "📅 Stay updated with our proposed calendar below.\n\n"
+    "💬 Join our Telegram channel for the latest updates and community discussions.")
     
     await update.message.reply_text(welcome_message)
     await the_main(update=update, context=context, command="start")
