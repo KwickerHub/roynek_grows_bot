@@ -26,6 +26,7 @@ import asyncio
 load_dotenv()
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # Your webhook URL
+key__ = os.getenv("THE_ROYNEK_KEY")
 
 url_plug = "https://roynek.com/alltrenders/codes/Telegram_Bot/Roynek%20Grows%20Bot"
 game_url = f'{url_plug}/pre_game.html'
@@ -81,7 +82,8 @@ async def the_main(update, context, command="start"):
             'tele_id': user_id,
             'referrer_id': referrer_id,
             'first_name': first_name,
-            'last_name': last_name
+            'last_name': last_name,
+            'key': key__,
         })
         result = response.json()
 
@@ -116,6 +118,7 @@ async def the_main(update, context, command="start"):
                 'third_party_id': user_id,
                 'signup_date': formattedDate,
                 'signup_time': formattedTime,
+                'key': key__,
             })
             result = response.json()
 
