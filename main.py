@@ -31,7 +31,9 @@ key__ = os.getenv("THE_ROYNEK_KEY")
 url_plug = "https://roynek.com/alltrenders/codes/Telegram_Bot/Roynek%20Grows%20Bot"
 game_url = f'{url_plug}/pre_game.html'
 calendar_url = "https://docs.google.com/document/d/1lfuj6zKsNyK16RrOSvDD2AmgFedJAaR-2b5xTJwX6iw/edit?usp=sharing"
-telegram_channel_url = "https://t.me/roynek_grows"
+# telegram_channel_url = "https://t.me/roynek_grows" #main/dev channel
+telegram_channel_url = "https://t.me/RoynekGames"
+telegram_channel_url2 = "https://t.me/RoynekEntertainment"
 telegram_community = "https://t.me/roynek_grows_coin"
 game_short_name = "roynek_grows_game"
 
@@ -100,7 +102,8 @@ async def the_main(update, context, command="start"):
             keyboard = [
                 [InlineKeyboardButton("Play Now", callback_game=game)],
                 [InlineKeyboardButton("View Our Calendar", url=calendar_url)],
-                [InlineKeyboardButton("Join Our Telegram Channel", url=telegram_channel_url)],
+                [InlineKeyboardButton("Join Our Gaming Channel", url=telegram_channel_url)],
+                [InlineKeyboardButton("Join Our Entertainment Channel", url=telegram_channel_url2)],
                 [InlineKeyboardButton("Join Our Community", url=telegram_community)]
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
@@ -136,6 +139,7 @@ async def the_main(update, context, command="start"):
                     [InlineKeyboardButton("Play Now", callback_game=game)],
                     [InlineKeyboardButton("View Our Calendar", url=calendar_url)],
                     [InlineKeyboardButton("Join Our Telegram Channel", url=telegram_channel_url)],
+                    [InlineKeyboardButton("Join Our Entertainment Channel", url=telegram_channel_url2)],
                     [InlineKeyboardButton("Join Our Community", url=telegram_community)]
                 ]
                 reply_markup = InlineKeyboardMarkup(keyboard)
